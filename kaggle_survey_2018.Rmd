@@ -1,0 +1,293 @@
+---
+title: "kaggle_survey_2018"
+author: "Muhsina Elampilakkattil"
+date: "20 November 2018"
+output: 
+  html_document:
+    toc: true
+    fig_height: 5
+    code_folding: hide
+---
+<hr/>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Introduction
+
+
+
+#Load Libraries
+
+
+```{r, message= FALSE, warning= FALSE}
+library(tidyverse)
+library(RColorBrewer)
+library(ggthemes)
+library(gridExtra)
+library(cowplot)
+
+#Load data
+other<- read_csv("datasets/freeFormResponses.csv")
+survey<- read_csv("datasets/multipleChoiceResponses.csv")
+schema<- read_csv("datasets/SurveySchema.csv");
+
+#Storing questions in a long data frame for reference
+questions<- read_csv("datasets/multipleChoiceResponses.csv", n_max= 1)
+questions<- gather(questions, column, descr)
+
+
+
+survey<- survey[-1, ]
+other<- other[-1, ]
+
+survey%>%
+count(Q1) %>%
+filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+  ggplot(aes(x= reorder(Q1, n),y=n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Gender Distribution", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+survey%>%
+count(Q3) %>%
+filter(!(Q3 %in% c("Other", "I do not wish to disclose my location"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+head(6) %>%
+  ggplot(aes(x= reorder(Q3, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Country", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#School major
+survey%>%
+count(Q5) %>%
+filter(!(Q5 %in% c("Other", "I never declared a major")),
+      !is.na(Q5)) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+  ggplot(aes(x= reorder(Q5, n),y=n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "School Major", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+#JobRole
+survey%>%
+count(Q6) %>%
+filter(!is.na(Q6)) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+  ggplot(aes(x= reorder(Q6, n),y=n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Current Job title/ Role", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+CS<-  survey%>%
+filter(Q5 == "Computer science (software engineering, etc.)",
+      Q6 %in% c("Data Scientist", "Data Engineer", "Data Analyst"),
+      !is.na(Q8),
+      Q7 != "I am a student")  
+
+
+NonCS<- survey%>%
+filter(Q5 != "Computer science (software engineering, etc.)",
+      Q6 %in% c("Data Scientist", "Data Engineer", "Data Analyst"),
+      !is.na(Q8),
+      Q7 != "I am a student")  
+
+
+CS%>%
+count(Q1) %>%
+filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+  ggplot(aes(x= reorder(Q1, n),y=n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Gender Distribution (CS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+NonCS%>%
+count(Q1) %>%
+filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+  ggplot(aes(x= reorder(Q1, n),y=n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Gender Distribution (Non- CS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Country living in
+CS%>%
+count(Q3) %>%
+filter(!(Q3 %in% c("Other", "I do not wish to disclose my location"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+head(6) %>%
+  ggplot(aes(x= reorder(Q3, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Country (CS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+NonCS%>%
+count(Q3) %>%
+filter(!(Q3 %in% c("Other", "I do not wish to disclose my location"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+head(6) %>%
+  ggplot(aes(x= reorder(Q3, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Country (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+#Employment Industry
+CS%>%
+count(Q7) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q7, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "EmploymentIndustry (CS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+NonCS%>%
+count(Q7) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q7, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "EmploymentIndustry (Non CS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+count(Q4) %>%
+filter(!(Q4 %in% c("Other", "I do not wish to disclose my location"))) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q4, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Country (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Income
+CS%>%
+filter(!(Q9 %in% c(NA, "I do not wish to disclose my approximate yearly compensation"))) %>%
+count(Q9) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q9, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Income (CS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+NonCS%>%
+filter(!(Q9 %in% c(NA, "I do not wish to disclose my approximate yearly compensation"))) %>%
+count(Q9) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q9, n), y= n)) +
+  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Income (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Activities important in the current role
+(activities<- NonCS%>%
+  select(matches("Q11_Part")) %>%
+  gather(Part, Activities, na.rm=TRUE) %>%
+  group_by(Activities) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count)))
+
+
+# Core wrapping function
+wrap.it <- function(x, len)
+{ 
+  sapply(x, function(y) paste(strwrap(y, len), 
+                              collapse = "\n"), 
+         USE.NAMES = FALSE)
+}
+
+
+# Call this function with a list or vector
+wrap.labels <- function(x, len)
+{
+  if (is.list(x))
+  {
+    lapply(x, wrap.it, len)
+  } else {
+    wrap.it(x, len)
+  }
+}
+
+
+label <- wrap.labels(activities$Activities, 30)
+
+activities%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(Activities, desc(count)), y= count)) +
+  geom_bar(stat= "identity", fill= "blue") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "Activities important in the current role (NonCS)", x= "", y= "Count") +
+    scale_x_discrete(labels= wrap.labels(activities$Activities, 30))+
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Primary tool use at work
+NonCS%>%
+filter(!is.na(Q12_MULTIPLE_CHOICE))
+count(Q12_MULTIPLE_CHOICE) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q12_MULTIPLE_CHOICE, n), y= n)) +
+  geom_bar(stat= "identity", fill= "blue") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Primary tool use at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
