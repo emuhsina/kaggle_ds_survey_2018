@@ -47,7 +47,7 @@ count(Q1) %>%
 filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
   ggplot(aes(x= reorder(Q1, n),y=n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Gender Distribution", x= "", y= "Count") +
@@ -61,7 +61,7 @@ mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
 head(6) %>%
   ggplot(aes(x= reorder(Q3, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Country", x= "", y= "Count") +
@@ -76,7 +76,7 @@ filter(!(Q5 %in% c("Other", "I never declared a major")),
       !is.na(Q5)) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
   ggplot(aes(x= reorder(Q5, n),y=n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "School Major", x= "", y= "Count") +
@@ -89,7 +89,7 @@ count(Q6) %>%
 filter(!is.na(Q6)) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
   ggplot(aes(x= reorder(Q6, n),y=n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Current Job title/ Role", x= "", y= "Count") +
@@ -115,7 +115,7 @@ count(Q1) %>%
 filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
   ggplot(aes(x= reorder(Q1, n),y=n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Gender Distribution (CS)", x= "", y= "Count") +
@@ -127,7 +127,7 @@ count(Q1) %>%
 filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
   ggplot(aes(x= reorder(Q1, n),y=n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Gender Distribution (Non- CS)", x= "", y= "Count") +
@@ -143,7 +143,7 @@ mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
 head(6) %>%
   ggplot(aes(x= reorder(Q3, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Country (CS)", x= "", y= "Count") +
@@ -157,7 +157,7 @@ mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
 head(6) %>%
   ggplot(aes(x= reorder(Q3, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Country (NonCS)", x= "", y= "Count") +
@@ -170,7 +170,7 @@ count(Q7) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
   ggplot(aes(x= reorder(Q7, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "EmploymentIndustry (CS)", x= "", y= "Count") +
@@ -182,7 +182,7 @@ count(Q7) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
   ggplot(aes(x= reorder(Q7, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "EmploymentIndustry (Non CS)", x= "", y= "Count") +
@@ -196,7 +196,7 @@ filter(!(Q4 %in% c("Other", "I do not wish to disclose my location"))) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
   ggplot(aes(x= reorder(Q4, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Country (NonCS)", x= "", y= "Count") +
@@ -211,7 +211,7 @@ count(Q9) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
   ggplot(aes(x= reorder(Q9, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Income (CS)", x= "", y= "Count") +
@@ -224,7 +224,7 @@ count(Q9) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
   ggplot(aes(x= reorder(Q9, n), y= n)) +
-  geom_bar(stat= "identity", fill= fillBlue) +
+  geom_bar(stat= "identity", fill= "blue") +
   geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
       position= position_dodge(0), color= "black", size= 2.5)+
   labs(title= "Income (NonCS)", x= "", y= "Count") +
@@ -279,7 +279,7 @@ arrange(desc(count)) %>%
 
 #Primary tool use at work
 NonCS%>%
-filter(!is.na(Q12_MULTIPLE_CHOICE))
+filter(!is.na(Q12_MULTIPLE_CHOICE)) %>%
 count(Q12_MULTIPLE_CHOICE) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
 arrange(desc(n)) %>%
@@ -290,4 +290,295 @@ arrange(desc(n)) %>%
   labs(title= "Primary tool use at work (NonCS)", x= "", y= "Count") +
   coord_flip() +
   theme_minimal(base_size= 8)
+
+
+#Activities important in the current role
+IDE<- NonCS%>%
+  select(matches("Q13_Part")) %>%
+  gather(Part, IDEs, na.rm=TRUE) %>%
+  group_by(IDEs) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+IDE%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(IDEs, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "IDEs used at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+#Notebooks used at work
+notebooks<- NonCS%>%
+  select(matches("Q14_Part")) %>%
+  gather(Part, notebook, na.rm=TRUE) %>%
+  group_by(notebook) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+notebooks%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(notebook, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "Notebooks used at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Programming laguages used at work
+lang<- NonCS%>%
+  select(matches("Q16_Part")) %>%
+  gather(Part, languages, na.rm=TRUE) %>%
+  group_by(languages) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+lang%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(languages, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "Programming languages used at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q17)) %>%
+count(Q17) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q17, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Language use at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q18)) %>%
+count(Q18) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q18, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Language recommend (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Machine learning framework
+mlFramework<- NonCS%>%
+  select(matches("Q19_Part")) %>%
+  gather(Part, framework, na.rm=TRUE) %>%
+  group_by(framework) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+mlFramework%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(framework, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "ML Framework used at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q20)) %>%
+count(Q20) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q20, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "ML framework mostly used (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+dataVizLib<- NonCS%>%
+  select(matches("Q21_Part")) %>%
+  gather(Part, library, na.rm=TRUE) %>%
+  group_by(library) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+dataVizLib%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(library, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "Dataviz libraries used at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q22)) %>%
+count(Q22) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q22, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "DataViz library mostly used (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q22)) %>%
+count(Q22) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q22, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "DataViz library mostly used (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q26)) %>%
+count(Q26) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q26, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Are you a DS? (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Data used
+data<- NonCS%>%
+  select(matches("Q31_Part")) %>%
+  gather(Part, type, na.rm=TRUE) %>%
+  group_by(type) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+data%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(type, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "data types used at work (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q32)) %>%
+count(Q32) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q32, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Data types mostly deal with (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#Datasets
+datasets<- NonCS%>%
+  select(matches("Q33_Part")) %>%
+  gather(Part, datasets, na.rm=TRUE) %>%
+  group_by(datasets) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+datasets%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(datasets, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "public datasets (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+#online platform
+online<- NonCS%>%
+  select(matches("Q36_Part")) %>%
+  gather(Part, platform, na.rm=TRUE) %>%
+  group_by(platform) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+online%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(platform, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "online platforms (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
+NonCS%>%
+filter(!is.na(Q37)) %>%
+count(Q37) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q37, n), y= n)) +
+  geom_bar(stat= "identity", fill= "darksalmon") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 2.5)+
+  labs(title= "Online platform mostly used (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+#media
+media<- NonCS%>%
+  select(matches("Q38_Part")) %>%
+  gather(Part, media, na.rm=TRUE) %>%
+  group_by(media) %>%
+  summarize(count= n()) %>%
+  arrange(desc(count))
+
+media%>%
+mutate(pct = count/ sum(count) * 100 ) %>%
+arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(media, count), y= count)) +
+  geom_bar(stat= "identity", fill= "burlywood1") +
+  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
+      position= position_dodge(0), color= "black", size= 3)+
+  labs(title= "media source (NonCS)", x= "", y= "Count") +
+  coord_flip() +
+  theme_minimal(base_size= 8)
+
+
 
