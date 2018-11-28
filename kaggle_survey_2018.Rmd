@@ -1,5 +1,5 @@
 ---
-title: "kaggle_survey_2018"
+title: "Data Scientists From Non-Computer Science Background"
 author: "Muhsina Elampilakkattil"
 date: "20 November 2018"
 output: 
@@ -14,12 +14,25 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Introduction
+#Introduction 
 
+"Data Scientist is ... "
+Programming skills and statistical knowledge are the most essential skills of a data scientist.
 
+"Can anyone from a non-computer science background be a data scientist?" "How can I be data scientist with a non-computer science background?" 
+The most common questions from some aspiring data scientists. In fact, these were the same questions which I googled 7 months back. 
+Data Scientist is the sexiest job of the 21st century.  There are so many people from diverse backgrounds trying to get this hottest job. Some of them think this job is meant for people from the computer science background. 
+When I started thinking about a career in data science, I had lots of questions flying over my head.  What programming language do I have to learn? Which online source will help me learning to programme? From where I get public datasets to do projects? etc..
+I thought it would be better if I get answers for these questions from people who are currently working as data scientists and from the non-computer science background. 
+In this exploratory analysis, I will be trying to get answers for these questions from data scientists with non-computer science background. 
 
-#Load Libraries
+###About the Dataset 
 
+ Kaggle conducted a worldwide survey to know about the state of data science and machine learning. The survey was live for one week in October. The datasets include 23,859 responses and 395 variables. These variables are the answers to survey questions. 
+
+When survey respondents selected the "Other" category, an option was given for a text response. These text responses were separated and shuffled to protect user privacy.
+
+We need to load multiple libraries and datasets to start the analysis.
 
 ```{r, message= FALSE, warning= FALSE}
 library(tidyverse)
@@ -37,72 +50,43 @@ schema<- read_csv("datasets/SurveySchema.csv");
 questions<- read_csv("datasets/multipleChoiceResponses.csv", n_max= 1)
 questions<- gather(questions, column, descr)
 
-
-
+#Remove the row with the long questions
 survey<- survey[-1, ]
 other<- other[-1, ]
+```
+###[Types of Data Scientists](https://blog.udacity.com/2018/01/4-types-data-science-jobs.html) 
+Data science combines several disciplines, including statistics, data analysis, machine learning, and computer science. 
+ Four types of data science jobs are,
+** The Data Analyst
+** The Data Engineer
+** The Machine Learning Engineer
+** The Data Science Generalist
 
+Therefore, here we are grouping Data Scientists, Data Analysts, and Data Engineers together.  We are considering undergraduate major (Question 4) as the attribute to subset the data as respondents working as data scientists with a non-computer science major. We need to filter out responses with an option "I am a student" to the Question 7 (In what industry is your current employer/contract?) to ensure the respondent is a working as a data scientist. 
+
+```{r}
+#Data Scientists
 survey%>%
-count(Q1) %>%
-filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-  ggplot(aes(x= reorder(Q1, n),y=n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Gender Distribution", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
-
-survey%>%
-count(Q3) %>%
-filter(!(Q3 %in% c("Other", "I do not wish to disclose my location"))) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-head(6) %>%
-  ggplot(aes(x= reorder(Q3, n), y= n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Country", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
-
-
-#School major
-survey%>%
-count(Q5) %>%
-filter(!(Q5 %in% c("Other", "I never declared a major")),
-      !is.na(Q5)) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-  ggplot(aes(x= reorder(Q5, n),y=n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "School Major", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
-
-#JobRole
-survey%>%
-count(Q6) %>%
-filter(!is.na(Q6)) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-  ggplot(aes(x= reorder(Q6, n),y=n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Current Job title/ Role", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
-
-CS<-  survey%>%
-filter(Q5 == "Computer science (software engineering, etc.)",
-      Q6 %in% c("Data Scientist", "Data Engineer", "Data Analyst"),
+filter(Q6 %in% c("Data Scientist", "Data Engineer", "Data Analyst"),
       !is.na(Q8),
-      Q7 != "I am a student")  
+       !is.na(Q5),
+      Q7 != "I am a student") %>%  
+  mutate(CS= ifelse(Q5=="Computer science (software engineering, etc.)", TRUE, FALSE)) %>%
+  select(Q6, CS)   %>%
+  group_by(Q6, CS)  %>%
+summarize(n= n()) %>%
+mutate(pct = n/ sum(n) * 100 ) %>%
+  ggplot(aes(x= reorder(Q6, n), y = n, fill= CS)) + 
+  geom_bar(stat = "identity") + 
+  scale_fill_manual(values = c("dodgerblue4", "gray70")) +
+  labs(title= "Data Scientists", x="", y="Count") +
+        annotate("text", x = "Data Analyst", y = 1665, label = "73.8%", hjust= 2) +
+        annotate("text", x = "Data Engineer", y = 667, label = "47.4%", hjust= 1.2) +
+        annotate("text", x = "Data Scientist", y = 3739, label = "67.7%", hjust= 2) +
+  coord_flip() + 
+  theme_minimal(base_size= 10)
 
-
+#Subset responses from non computer science major
 NonCS<- survey%>%
 filter(Q5 != "Computer science (software engineering, etc.)",
       Q6 %in% c("Data Scientist", "Data Engineer", "Data Analyst"),
@@ -110,17 +94,7 @@ filter(Q5 != "Computer science (software engineering, etc.)",
       Q7 != "I am a student")  
 
 
-CS%>%
-count(Q1) %>%
-filter(!(Q1 %in% c("Prefer not to say", "Prefer to self-describe"))) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-  ggplot(aes(x= reorder(Q1, n),y=n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Gender Distribution (CS)", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
+
 
 NonCS%>%
 count(Q1) %>%
@@ -136,19 +110,7 @@ mutate(pct = n/ sum(n) * 100 ) %>%
 
 
 #Country living in
-CS%>%
-count(Q3) %>%
-filter(!(Q3 %in% c("Other", "I do not wish to disclose my location"))) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-head(6) %>%
-  ggplot(aes(x= reorder(Q3, n), y= n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Country (CS)", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
+
 
 NonCS%>%
 count(Q3) %>%
@@ -165,17 +127,7 @@ head(6) %>%
   theme_minimal(base_size= 8)
 
 #Employment Industry
-CS%>%
-count(Q7) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q7, n), y= n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "EmploymentIndustry (CS)", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
+
 
 NonCS%>%
 count(Q7) %>%
@@ -205,18 +157,7 @@ arrange(desc(n)) %>%
 
 
 #Income
-CS%>%
-filter(!(Q9 %in% c(NA, "I do not wish to disclose my approximate yearly compensation"))) %>%
-count(Q9) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q9, n), y= n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Income (CS)", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
+
 
 NonCS%>%
 filter(!(Q9 %in% c(NA, "I do not wish to disclose my approximate yearly compensation"))) %>%
