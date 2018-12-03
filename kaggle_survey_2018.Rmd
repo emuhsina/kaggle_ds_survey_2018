@@ -5,9 +5,10 @@ date: "20 November 2018"
 output: 
   html_document:
     toc: true
-    fig_height: 5
+    fig_height: 4
     fig_width: 6
     code_folding: hide
+    theme: flatly
 ---
 <hr/>
 
@@ -20,7 +21,13 @@ Harvard Business Review described Data Science as the sexiest job of the 21st ce
 
 >*Data Science is all about manipulating large and unstructured data sources and creates insights from them.* 
 
-Data Scientist has become one of the most sought-after disciplines in our world of increasing data. And data scientists seem to come from the diverse educational background.  Even though people ask questions like, "Can anyone from a non-computer science background be a data scientist?" "How can I be data scientist with a non-computer science background?".  The most common questions from some aspiring data scientists. In fact,  the same questions which I googled 7 months back.
+Data Scientist has become one of the most sought-after disciplines in our world of increasing data. And data scientists seem to come from the diverse educational background.  Even though people ask questions like,
+
+*"Can anyone from a non-computer science background be a data scientist?"* 
+
+*"How can I be data scientist with a non-computer science background?"*
+
+The most common questions from some aspiring data scientists. In fact,  the same questions which I googled 7 months back.
 
  There are so many people from diverse backgrounds trying to get this hottest job. Some of them think this job is meant for people from the computer science background. 
 My educational background is in Finance and Accounting. When I started thinking about a career in data science, I had lots of questions flying over my head.  What programming language do I have to learn? Which online source will help me learning to programme? etc..
@@ -32,7 +39,7 @@ When I came across the Kaggle Data Science & Machine Learning Survey 2018, I dec
 
 ###About the Dataset 
 
- Kaggle conducted a worldwide survey to know about the state of data science and machine learning. The survey was live for one week in October. The datasets include 23,859 responses and 395 variables. These variables are the answers to survey questions. 
+ Kaggle conducted a worldwide survey to know about the state of data science and machine learning. The survey was live for one week in October. The datasets include **23,859** responses and **395** variables. These variables are the answers to survey questions. 
 
 When survey respondents selected the "Other" category, an option was given for a text response. These text responses were separated and shuffled to protect user privacy.
 
@@ -46,9 +53,7 @@ library(gridExtra)
 library(cowplot)
 
 #Load data
-other<- read_csv("datasets/freeFormResponses.csv")
 survey<- read_csv("datasets/multipleChoiceResponses.csv")
-schema<- read_csv("datasets/SurveySchema.csv");
 
 #Storing questions in a long data frame for reference
 questions<- read_csv("datasets/multipleChoiceResponses.csv", n_max= 1)
@@ -56,28 +61,37 @@ questions<- gather(questions, column, descr)
 
 #Remove the row with the long questions
 survey<- survey[-1, ]
-other<- other[-1, ]
 ```
+
+
 ###Types of Data Scientists
 
 Data science is a complex and often confusing field. Data science combines several disciplines, including statistics, data analysis, machine learning, and computer science. 
 According to a featured [article](https://blog.udacity.com/2018/01/4-types-data-science-jobs.html) in Udacity, there are four types of data science jobs.
- - The Data Analyst
+
+**1. The Data Analyst**
+
 There are some companies where being a data scientist is synonymous with being a data analyst. Your job might consist of tasks like pulling data out of SQL databases, becoming an Excel or Tableau master, and producing basic data visualizations and reporting dashboards. You may on occasion analyze the results of an A/B test or take the lead on your company’s Google Analytics account. 
- - The Data Engineer
+
+**2. The Data Engineer**
+
 Some companies get to the point where they have a lot of traffic (and an increasingly large amount of data), and they start looking for someone to set up a lot of the data infrastructure that the company will need moving forward. They’re also looking for someone to provide analysis. You’ll see job postings listed under both “Data Scientist” and “Data Engineer” for this type of position. Since you’d be (one of) the first data hires, heavy statistics and machine learning expertise is less important than strong software engineering skills. 
- - The Machine Learning Engineer
+
+**3. The Machine Learning Engineer**
+
 There are a number of companies for whom their data (or their data analysis platform) is their product. In this case, the data analysis or machine learning going on can be pretty intense. This is probably the ideal situation for someone who has a formal mathematics, statistics, or physics background and is hoping to continue down a more academic path. 
- - The Data Science Generalist
+
+**4. The Data Science Generalist**
+
 A lot of companies are looking for a generalist to join an established team of other data scientists. The company you’re interviewing for cares about data but probably isn’t a data company. It’s equally important that you can perform analysis, touch production code, visualize data, etc.
 
-“Some of the most important ‘data generalist’ skills are familiarity with tools designed for ‘big data,’ and experience with messy, ‘real-life’ datasets.”
+*“Some of the most important ‘data generalist’ skills are familiarity with tools designed for ‘big data,’ and experience with messy, ‘real-life’ datasets.”*
 
 ###Data Scientists Subset
 
 In this analysis, we are grouping Data Scientists, Data Analysts, and Data Engineers together as Data Scientists subset.  We are considering undergraduate major (Question 4) as the attribute to subset the data as respondents working as data scientists with a non-computer science major. We need to filter out responses with an option "I am a student" to the Question 7 (In what industry is your current employer/contract?) to ensure the respondent is working as a data scientist. 
 
-**Note: Throughout this analysis, Data Scientists means people who responded their current job title or role as any of Data scientist, data analyst, or data engineer in the survey.**
+**<span style= "color: royalblue4"> Note: Throughout this analysis, Data Scientists means people who responded their current job title or role as any of Data scientist, data analyst, or data engineer in the survey.</span>**
 
 ```{r}
 
@@ -88,11 +102,15 @@ filter(Q5 != "Computer science (software engineering, etc.)",
       !is.na(Q8),
       Q7 != "I am a student")  
 ```
+
+
 #Data Scientists with Non-Computer Science Major
+
 It's widely assumed that you will need a formal education in Computer Science to pursue a career in data science. The definition and job description of data scientists vary from company to company. But it's clear that a data scientist should be able to manipulate large and unstructured data and create insights from them.
 Studies have shown that data scientists come from diverse backgrounds.
 
 Out of the 23859 responses in the Kaggle Survey 2018, **25% of respondents are currently working as data scientists**. 
+
 ```{r}
 #Data Scientists
 survey%>%
@@ -107,62 +125,73 @@ survey%>%
   mutate(pct = n/ sum(n) * 100 ) %>%
     ggplot(aes(x= reorder(Q6, n), y = n, fill= factor(CS, levels= c(TRUE,FALSE)))) + 
     geom_bar(stat = "identity", position= "dodge") + 
-    scale_fill_manual(values = c("gray70","dodgerblue4"),  name="Undergraduate Major",
+    scale_fill_manual(values = c("gray75","royalblue4"),name="",
                        breaks=c(FALSE, TRUE),
                        labels=c("Non-Computer Science", "Computer Science")) +
-    labs(title= "Data Scientists", x="", y="Count") +
-    annotate("text", x = "Data Analyst", y = 1228, label = "73.8%", hjust= 1, vjust= -1.5, color= "white") +
-    annotate("text", x = "Data Engineer", y = 316, label = "47.4%", hjust= 1, vjust= -1.5, color= "white") +
-    annotate("text", x = "Data Scientist", y = 2529, label = "67.7%", hjust= 1, vjust= -1.5, color= "white") +
+    labs(x="", y="Count") +
+    annotate("text", x = "Data Analyst", y = 1228, label = "73.8%", hjust= 1, vjust= -1.5, color= "white", size= 3) +
+    annotate("text", x = "Data Engineer", y = 316, label = "47.4%", hjust= 1, vjust= -1.5, color= "white", size= 3) +
+    annotate("text", x = "Data Scientist", y = 2529, label = "67.7%", hjust= 1, vjust= -1.5, color= "white", size= 3) +
     coord_flip() + 
-    theme(axis.ticks = element_blank(), panel.grid.minor = element_blank(), panel.grid.major = element_blank(), panel.background= element_blank(), legend.position="bottom")
+    theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="bottom", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9),
+          legend.text=element_text(size=9))
+
 ```
+
 
 I think you have got the answer to the first question.Can anyone from a non-computer science background be a data scientist? 
 
-Of course, yes! 
+**Of course, yes!** 
 
 67% of the data scientists are from no-computer science backgrounds. They are from diverse backgrounds like Social science, mathematics, and statistics, business disciplines, fine arts, humanities, etc.
 
 It's time to know how to become a data scientist without a computer science major.
 
-#1. Find out if it's really for you
+##1. Find out if it's really for you
 We know data scientists are from diverse educational backgrounds. Before seeking how to learn the skills needed, make sure it's really for you. It requires continuous learning and practicing of complex concepts. 
 Let's get to know the selected data scientists in detail. 
 
-##Education
+###Education
 
 We identified a set of working data scientists with a non-computer science major from the kaggle survey data. They are 4073 in total. What about their highest level of formal education?
 
 
 ```{r}
 
-#Employment Industry
-NonCS%>%
-count(Q7) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q7, n), y= n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "EmploymentIndustry (Non CS)", x= "", y= "Count") +
-  coord_flip() +
-  theme_minimal(base_size= 8)
-
 #Education
 NonCS%>%
 count(Q4) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
+mutate(percent = n/ sum(n) * 100,
+      highlight_flag = ifelse(percent > 15, T, F)) %>%
 arrange(desc(n)) %>%
 head(5)%>%
-  ggplot(aes(x= reorder(Q4, n), y= n)) +
-  geom_bar(stat= "identity", fill= "royalblue4") +
-  geom_text(aes(label= paste0(round(pct,1),"%", sep="", hjust= 0)),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Education (NonCS)", x= "", y= "Count") +
+  ggplot(aes(x= reorder(Q4, n), y= n, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Education", x= "", y= "Count") +
+  scale_x_discrete(labels = function(x) lapply(str_wrap(x, width = 25), paste, collapse="\n")) +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
 ```
 
 95% of the data scientists are having at least a bachelors degree. 
@@ -172,186 +201,260 @@ It's important to know the daily activities you'll have to do in your work once 
 
 ```{r}
 #Activities important in the current role
-(activities<- NonCS%>%
+NonCS%>%
   select(matches("Q11_Part")) %>%
   gather(Part, Activities, na.rm=TRUE) %>%
   group_by(Activities) %>%
   summarize(count= n()) %>%
-  arrange(desc(count)))
-
-
-# Core wrapping function
-wrap.it <- function(x, len)
-{ 
-  sapply(x, function(y) paste(strwrap(y, len), 
-                              collapse = "\n"), 
-         USE.NAMES = FALSE)
-}
-
-
-# Call this function with a list or vector
-wrap.labels <- function(x, len)
-{
-  if (is.list(x))
-  {
-    lapply(x, wrap.it, len)
-  } else {
-    wrap.it(x, len)
-  }
-}
-
-
-label <- wrap.labels(activities$Activities, 30)
-
-activities%>%
-mutate(pct = count/ sum(count) * 100 ) %>%
-arrange(desc(count)) %>%
-  ggplot(aes(x= reorder(Activities, desc(count)), y= count)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 3)+
-  labs(title= "Activities important in the current role (NonCS)", x= "", y= "Count") +
-    scale_x_discrete(labels= wrap.labels(activities$Activities, 30))+
+  arrange(desc(count)) %>%
+  mutate(percent = count/ sum(count) * 100,
+       highlight_flag = ifelse(percent > 20, T, F)) %>%
+  arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(Activities, count), y= count, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Important Activities of Data Scientists", x= "", y= "Count") +
+  scale_x_discrete(labels = function(x) lapply(str_wrap(x, width = 25), paste, collapse="\n")) +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
 ```
 
-The important activities of a data scientist are to analyze and understand data to influence product or business decisions. Along with, you may have to do the following:
- - Build prototypes to explore applying machine learning to new areas 
- - Build and/or run a machine learning service that operationally improves my product or workflows
- - Build and/or run the data infrastructure that my business uses for storing, analyzing, and operationalizing data
- - Do research that advances the state of the art of machine learning
+The important activities of a data scientist are to **analyze and understand data to influence product or business decisions**. Along with, you may have to do the following:
+
+* Build prototypes to explore applying machine learning to new areas 
+
+* Build and/or run a machine learning service that operationally improves my product or workflows
+
+* Build and/or run the data infrastructure that my business uses for storing, analyzing, and operationalizing data
+
+* Do research that advances the state of the art of machine learning
+
  
 ###Time spend for coding
-58% of the data scientists use more than half of their time actively coding. 
+
+**58% of the data scientists use more than half of their time actively coding. **
+
 ```{r}
-#Coding time
+#Time spend for coding
 NonCS%>%
-filter(!(Q23 %in% c(NA, "I do not wish to disclose my approximate yearly compensation"))) %>%
-count(Q23) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q23,n), y= n)) +
-  geom_bar(stat= "identity", fill= "royalblue4") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Coding Time (NonCS)", x= "", y= "Count") +
+  filter(!(Q23 %in% c(NA, "I do not wish to disclose my approximate yearly compensation"))) %>%
+  count(Q23) %>%
+  mutate(percent = n/ sum(n) * 100,
+        highlight_flag = ifelse(Q23 %in% c("100% of my time", "50% to 74% of my time", "75% to 99% of my time"), T, F)) %>%
+  arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q23,n), y= n, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Time Spend for Coding", x= "", y= "Count") +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
 ```
  
 ###Primary Tools and IDEs
 
 More than half of the data scientists use local or hosted development environments like R Studio, Jupyter Lab, etc.
 
-```{r}
+```{r, fig.width= 10}
 #Primary tool use at work
-NonCS%>%
-filter(!is.na(Q12_MULTIPLE_CHOICE)) %>%
-count(Q12_MULTIPLE_CHOICE) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q12_MULTIPLE_CHOICE, n), y= n)) +
-  geom_bar(stat= "identity", fill= "blue") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
+tools<- NonCS%>%
+  filter(!is.na(Q12_MULTIPLE_CHOICE)) %>%
+  count(Q12_MULTIPLE_CHOICE) %>%
+  mutate(percent = n/ sum(n) * 100,
+        highlight_flag = ifelse(percent > 50, T, F)) %>%
+  arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q12_MULTIPLE_CHOICE, n), y= n, fill=highlight_flag )) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
   labs(title= "Primary tool use at work (NonCS)", x= "", y= "Count") +
+  scale_x_discrete(labels = function(x) lapply(str_wrap(x, width = 30), paste, collapse="\n")) +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
 
 
-#IDEs used
+#IDEs used at work
 IDE<- NonCS%>%
   select(matches("Q13_Part")) %>%
   gather(Part, IDEs, na.rm=TRUE) %>%
   group_by(IDEs) %>%
   summarize(count= n()) %>%
-  arrange(desc(count))
-
-IDE%>%
-mutate(pct = count/ sum(count) * 100 ) %>%
-arrange(desc(count)) %>%
-  ggplot(aes(x= reorder(IDEs, count), y= count)) +
-  geom_bar(stat= "identity", fill= "burlywood1") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 3)+
-  labs(title= "IDEs used at work (NonCS)", x= "", y= "Count") +
+  arrange(desc(count))%>%
+  mutate(percent = count/ sum(count) * 100,
+         highlight_flag = ifelse(percent >15, T, F)) %>%
+  arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(IDEs, count), y= count, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Popular IDEs used by Data Scientists", x= "", y= "Count") +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
+
+plot_grid(tools, IDE, align="h", rel_widths = c(1,1))
 
 ```
 
 35% of the data scientists use Jupyter Notebook/ IPython and RStudio. 
 
 ###Programming Languages 
-Python take the leading posiotion among data scientists. 70% of the data scientists use any of Python, SQL, and R for programming.
- 78% of the data scientists use Python or R regularly at work.
-Majority of the data scientists recommend aspiring data scientists to start by learning python. 
+
+**Python take the leading posiotion among data scientists**. 70% of the data scientists use any of Python, SQL, and R for programming.
+ **78% of the data scientists use Python or R regularly at work.**
+**Majority of the data scientists recommend aspiring data scientists to start by learning python. **
+
 ```{r}
-#Programming laguages used at work
-lang<- NonCS%>%
+#Programming laguages used at work on regular basis
+plot1<- NonCS%>%
   select(matches("Q16_Part")) %>%
   gather(Part, languages, na.rm=TRUE) %>%
   group_by(languages) %>%
   summarize(count= n()) %>%
-  arrange(desc(count))
-
-lang%>%
-mutate(pct = count/ sum(count) * 100 ) %>%
-arrange(desc(count)) %>%
-  ggplot(aes(x= reorder(languages, count), y= count)) +
-  geom_bar(stat= "identity", fill= "burlywood1") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 3)+
-  labs(title= "Programming languages used at work (NonCS)", x= "", y= "Count") +
+  arrange(desc(count))%>%
+  mutate(percent = count/ sum(count) * 100,
+      highlight_flag = ifelse(percent >10, T, F)) %>%
+  arrange(desc(count)) %>%
+  ggplot(aes(x= reorder(languages, count), y= count, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Programming languages used at work regularly", x= "", y= "Count") +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
 
 #Mostly used programming language
+plot2<- #Mostly used programming language
 NonCS%>%
-filter(!is.na(Q17)) %>%
-count(Q17) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q17, n), y= n)) +
-  geom_bar(stat= "identity", fill= "darksalmon") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Language use at work (NonCS)", x= "", y= "Count") +
+  filter(!is.na(Q17)) %>%
+  count(Q17) %>%
+  mutate(percent = n/ sum(n) * 100,
+             highlight_flag = ifelse(percent >20, T, F)) %>%
+  arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q17, n), y= n, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Language use most often", x= "", y= "Count") +
   coord_flip() +
-  theme_minimal(base_size= 8)
+   theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
+
+plot_grid(plot1, plot2, align="h", rel_widths = c(1,1))
 
 #Language recommendation
 NonCS%>%
-filter(!is.na(Q18)) %>%
-count(Q18) %>%
-mutate(pct = n/ sum(n) * 100 ) %>%
-arrange(desc(n)) %>%
-  ggplot(aes(x= reorder(Q18, n), y= n)) +
-  geom_bar(stat= "identity", fill= "darksalmon") +
-  geom_text(aes(label= paste0(round(pct,2),"%", sep="")),
-      position= position_dodge(0), color= "black", size= 2.5)+
-  labs(title= "Language recommend (NonCS)", x= "", y= "Count") +
+  filter(!is.na(Q18)) %>%
+  count(Q18) %>%
+  mutate(percent = n/ sum(n) * 100,
+        highlight_flag = ifelse(percent >50, T, F)) %>%
+  arrange(desc(n)) %>%
+  ggplot(aes(x= reorder(Q18, n), y= n, fill= highlight_flag)) +
+  geom_bar(stat= "identity", width= 0.7) +
+  scale_fill_manual(values= c("gray70", "royalblue4")) +
+  geom_text(aes(label= paste0(round(percent,1),"%", sep="")),
+      position= position_dodge(0), color= "white", size= 2.7, hjust= 1)+
+  labs(title= "Language recommendation", x= "", y= "Count") +
   coord_flip() +
-  theme_minimal(base_size= 8)
+  theme(axis.ticks = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background= element_blank(), 
+          legend.position="none", 
+          plot.title = element_text(size= 10, face= "bold"),
+          axis.line= element_line(linetype= "blank"), 
+          axis.text.x = element_text(color="gray40", size=8),
+          axis.text.y = element_text(color="gray40", size=8),
+          axis.title.x = element_text(color= "gray40", size= 9))
 
-# Grouping by language_preference and then LanguageRecommendationSelect
+# Grouping by language preference and then Language Recommendation
 recommendations <- NonCS  %>% 
     group_by(Q17, Q18)  %>% 
     summarize(count= n()) %>%
-
-# Removing empty responses and include the top recommendations
+    # Removing empty responses and include the top recommendations
     filter(Q18 != "NA",
           Q17 %in% c("Python", "R")) %>%
     arrange(Q17, desc(count)) %>%
-    mutate(row_n = row_number()) %>%
+    mutate(row_n = row_number(),
+          highlight_flag = ifelse(Q18 == "Python" , T, F)) %>%
     filter(row_n <= 4)
-recommendations
 
 # Creating a faceted bar plot
-ggplot(recommendations, aes(x= Q18, y = count))+ geom_bar(stat = "identity", fill= "royalblue4") +
-    facet_wrap(~ Q17, scales = "free_x") +
-    theme(axis.ticks = element_blank(), panel.grid.minor = element_blank(), panel.grid.major = element_blank(), panel.background= element_blank(), legend.position="bottom")
+ggplot(recommendations, aes(x= Q18, y = count, fill= highlight_flag))+ 
+geom_bar(stat= "identity", width= 0.7) +
+facet_wrap(~ Q17, scales = "free_x") +
+scale_fill_manual(values= c("gray70", "royalblue4")) +
+labs(title= "Language Preference & Language recommendation ", x= "Recommended Language", y= "Count") +
+theme(axis.ticks = element_blank(), 
+  panel.grid.minor = element_blank(), 
+  panel.grid.major = element_blank(), 
+  panel.background= element_blank(), 
+  legend.position="none", 
+  plot.title = element_text(size= 10, face= "bold"),
+  axis.line= element_line(linetype= "blank"), 
+  axis.text.x = element_text(color="gray40", size=8),
+  axis.text.y = element_text(color="gray40", size=8),
+  axis.title.x = element_text(color= "gray40", size= 9),
+  axis.title.y = element_text(color= "gray40", size= 9))
 
 ```
 
@@ -359,12 +462,57 @@ Data Scientists who use Python and R recommend learning python first.
 If you still need a career in Data Science, better you start with learning Python.
 
 
-##2.Acquire Additional Skills
-Even though you are not from a computer science background, you may know some programming languages. Understand what skills you have and what not. 
-Let's see how data scientists acquired their analytical and programming skills.
+##2. Acquire Additional Skills
 
-###Online Platform
-80% of the data scientists have used at least one online platform of Coursera, DataCamp, Udemy, Udacity, edX and Kaggle Learn.
+Even though you are not from a computer science background, you may know some programming languages. Understand what skills you have and what not. 
+There are many ways to gain knowledge and build a career in data science including online courses, blogs, YouTube videos and more.
+
+###Online Learning Platforms
+
+* **Coursera**
+
+Coursera courses last approximately four to ten weeks, with one to two hours of video lectures a week. These courses provide quizzes, weekly exercises, peer-graded assignments, and sometimes a final project or exam. Courses are also provided on-demand, in which case users can take their time in completing the course with all of the material available at once.
+
+* **Datacamp**
+
+DataCamp is a time flexible, online data science learning platform offering tutorials and courses in data science. You can learn languages like Python and R. In addition to to tutorials you can do projects in DataCamp. This is one of my favorite platform to learn data science.
+
+* **Udemy**
+
+Udemy is a learning platform. Unlike academic MOOC programs driven by traditional collegiate coursework, Udemy provides a platform for experts of any kind to create courses which can be offered to the public, either at no charge or for a tuition fee. Udemy provides tools which enable users to create a course, promote it and earn money from student tuition charges. 
+
+* **edX**
+
+edX is a Massive Open Online Course (MOOC) provider. Courses may consist of video and text content, discussion forums, and a number of problem and assessment types. The majority of edX courses are entirely free to access and most also offer an optional verified certificate track for a fee that varies per course.
+
+* **Udacity**
+
+Udacity is built with topic specializations called "Nanodegrees," and each of these tracks are in collaboration with big companies and ML projects, like Amazon, Google, IBM Watson, etc.
+
+Udacity is a good platform overall, and they do a great job helping students build a portfolio during each program. 
+
+* **Kaggle Learn**
+
+ Kaggle learn is a free, practical, hands-on courses that cover the minimum prerequisites needed to quickly get started in the field. everything is done using Kaggle’s kernels. This means that you can interact and learn.
+  
+###Other Online sources
+
+The field of data science is broad and constatntly evolving. Whether you’re a student or new professional working in the field of data science, some resources are valuable for discovering the latest employment opportunities, finding tutorials for the processes and systems you’re using on a daily basis, learning hacks and tricks to boost your performance, and connecting with other professionals in your field.
+
+* **Medium**
+
+ You will get great stories about data science from medium
+ 
+* **Kaggle Forumns**
+ 
+* **KDnuggets blog**
+
+ KDnuggets is a comprehensive resource for anyone with a vested interest in the data science community, whether a student in pursuit of professional goals or a working professional whose role is impacted by data science.
+ 
+ 
+ 
+**80% of the data scientists have used at least one online platform of Coursera, DataCamp, Udemy, Udacity, edX and Kaggle Learn.**
+
 More than half of them have spent most of their time learning from Coursera and DataCamp. 
 Your knowledge about data science needs to be updated. You can get knowledge on data science topic by following media like Kaggle forums, Medium, KDnuggets blog, etc. 
 It's always better to follow multiple media. 
@@ -426,21 +574,21 @@ arrange(desc(count)) %>%
 
 ###Most Popular Frameworks and Libraries
 ####Machine Learning Framework
- - Scikit-Learn
+*Scikit-Learn
  This Python module based on NumPy and SciPy is one of the best libraries for working with data. It provides algorithms for many standard machine learning and data mining tasks such as clustering, regression, classification, dimensionality reduction, and model selection.
- - TensorFlow
+ * TensorFlow
  TensorFlow is a popular framework for deep and machine learning, developed in Google Brain. It provides abilities to work with artificial neural networks with multiple data sets. Among the most popular TensorFlow applications are object identification, speech recognition, and more. There are also different layer-helpers on top of regular TensorFlow, such as tflearn, tf-slim, skflow, etc.
- - Keras
+* Keras
  Keras is a high-level library for working with neural networks, running on top of TensorFlow, Theano, and now as a result of the new releases, it is also possible to use CNTK and MxNet as the backends. It simplifies many specific tasks and greatly reduces the amount of monotonous code. However, it may not be suitable for some complicated things.
  
 
 ####Data Visualization Library
 Data Visualization is a very important in data analysis. You can visualize the data to get quick insights from the large and unstructured data. Most commonly used data visualization libraries are:
- - Matplotlib
+* Matplotlib
  Matplotlib is the mostly used data visualization library. Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments across platforms. You can generate plots, histograms, power spectra, bar charts, errorcharts, scatterplots, etc., with just a few lines of code. 
- - ggplot2
+* ggplot2
  ggplot2 is one of the most popular packages for data visualization among R users. ggplot2 follows the '[grammar of graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl?ie=UTF8&qid=1477928463&sr=8-1&keywords=the+grammar+of+graphics&linkCode=sl1&tag=ggplot2-20&linkId=f0130e557161b83fbe97ba0e9175c431)' to create elegant data visualizations. 
- - Seaborn
+* Seaborn
 Seaborn is a Python data visualization library built on top of matplotlib. It provides a high-level interface for drawing attractive and informative statistical graphics.
 
 ```{r}
@@ -559,8 +707,6 @@ arrange(desc(count)) %>%
   theme_minimal(base_size= 8)
 
 
-NonCS%>%
-
 
 
 #Datasets
@@ -583,8 +729,9 @@ arrange(desc(count)) %>%
   theme_minimal(base_size= 8)
 ```
 
-##End-to-end Projects
-After acquiring basic analytical and programming knowledge, start doing real-world projects to boost your knowledge. Doing projects is the best way to show skills in your portfolio. You can download lots of public datasets from various sites. 
+##3. End-to-end Projects
+Acquiring basic analytical and programming knowledge, and course certification is not enough to get a job. Doing real-world projects helps to boost your knowledge and start your career in data science.By showcasing these projects in your portfolio, recruiters can easily eveluate your potential. 
+The first step is to find a dataset to work with. You can download lots of public datasets from various sites. 
 
 ```{r}
 #Public datasets
@@ -608,6 +755,7 @@ arrange(desc(count)) %>%
 
 
 #datatypes mostly used at work
+NonCS %>%
 filter(!is.na(Q32)) %>%
 count(Q32) %>%
 mutate(pct = n/ sum(n) * 100 ) %>%
@@ -651,8 +799,10 @@ Majority of their opinion is independent project are important than academic ach
 
 
 
+#Conclusion
 
-
-##References
+#References
 1. https://medium.com/activewizards-machine-learning-company/top-20-python-libraries-for-data-science-in-2018-2ae7d1db8049
-2. 
+2. https://www.learndatasci.com/best-data-science-online-courses/
+3. https://www.ngdata.com/top-data-science-resources/
+4. https://www.sharpsightlabs.com/blog/highlight-data-in-ggplot2/
